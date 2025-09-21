@@ -45,3 +45,10 @@ build-iPhoneSimulator/
 # Code editor stuff
 .idea/
 .vscode/
+
+# Logs
+logs/
+*.log
+
+# Output files
+output/
