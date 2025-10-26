@@ -5,7 +5,9 @@ require 'erb'
 # Load and parse configuration data from YAML files
 class AppConfigLoader
   class << self
-    attr_reader :conf
+    attr_reader :conf, :loaded_files
+
+    SYSTEM_LIBS = %w[json yaml erb].freeze
 
     # Main method for loading configuration
     # @param config_path [String] Path to the main configuration file
@@ -20,6 +22,40 @@ class AppConfigLoader
 
       additional_configs = load_config(configs_directory)
       @conf = merge_configs(@conf, additional_configs)
+    end
+
+    # Load system and local libraries
+    # @param libs_directory [String] Directory path containing Ruby library files (default: 'lib')
+    def load_libs(libs_directory = 'lib')
+      @loaded_files ||= []
+
+      # Load system libraries
+      SYSTEM_LIBS.each do |lib|
+        require lib
+        @loaded_files << lib unless @loaded_files.include?(lib)
+      rescue LoadError => e
+        puts "Warning: Could not load system library '#{lib}': #{e.message}"
+      end
+
+      # Load local libs
+      return unless Dir.exist?(libs_directory)
+
+      ruby_files = Dir.glob(File.join(libs_directory, '**', '*.rb'))
+
+      ruby_files.each do |file_path|
+        # Get relative path for tracking
+        relative_path = File.expand_path(file_path)
+
+        # Skip if already loaded
+        next if @loaded_files.include?(relative_path)
+
+        begin
+          require_relative relative_path
+          @loaded_files << relative_path
+        rescue LoadError, StandardError => e
+          puts "Warning: Could not load '#{file_path}': #{e.message}"
+        end
+      end
     end
 
     # Pretty print configuration data in JSON format
