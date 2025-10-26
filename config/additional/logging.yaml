@@ -1,0 +1,10 @@
+# Location of the log folder
+directory: "logs"
+
+# Logging level (DEBUG, INFO, WARN, ERROR)
+level: "DEBUG"
+
+# Log files settings
+files:
+  application_log: "app.log"  # File name for application logs
+  error_log: "error.log"  # Error log file name

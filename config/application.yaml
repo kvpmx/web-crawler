@@ -1,0 +1,11 @@
+# Specifies the root directory of the project
+root_dir: <%= File.expand_path('../', __FILE__) %>
+
+# Directory where main configuration file is stored
+config_dir: config
+
+# Directory for YAML configurations
+yaml_dir: config/additional
+
+# Directory for media files (images, videos, etc.)
+media_dir: media

@@ -1,0 +1,4 @@
+# URL of the source page for data collection
+start_page: https://books.toscrape.com/index.html
+
+# TODO: Add selectors

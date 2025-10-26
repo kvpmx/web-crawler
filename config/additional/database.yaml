@@ -1,0 +1,14 @@
+# Database type used in the project
+database_type: sqlite # or 'mongodb'
+
+sqlite_database:
+  # Path to the SQLite database file
+  db_file: db/local_database.sqlite
+
+  # Additional parameters (if necessary)
+  timeout: 5000 # Connection timeout in milliseconds
+  pool_size: 5  # Connection pool size
+
+mongodb_database:
+  uri: mongodb://localhost:27017  # URL for connecting to MongoDB
+  db_name: my_database  # Name of the MongoDB database
