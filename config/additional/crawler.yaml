@@ -1,4 +1,14 @@
 # URL of the source page for data collection
-start_page: https://books.toscrape.com/index.html
+start_page: "https://books.toscrape.com/index.html"
 
-# TODO: Add selectors
+# Selectors
+book_details_link: "article.product_pod a"
+next_page_link: "ul.page li.next a"
+
+title: ".product_main h1"
+description: "#product_description + p"
+category: ".breadcrumb li:nth-child(3) a"
+price: ".product_main .price_color"
+availability: ".product_main .instock.availability"
+image: "#product_gallery .thumbnail img"
+product_info: ".sub-header:has(h2) + .table.table-striped"

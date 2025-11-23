@@ -1,14 +1,10 @@
-require 'json'
-require 'yaml'
-require 'erb'
-
 module Application
   # Load and parse configuration data from YAML files
   class AppConfigLoader
     class << self
       attr_reader :conf, :loaded_files
 
-      SYSTEM_LIBS = %w[json yaml erb logger fileutils].freeze
+      SYSTEM_LIBS = %w[json yaml erb logger fileutils pp].freeze
 
       # Main method for loading configuration
       # @param config_path [String] Path to the main configuration file

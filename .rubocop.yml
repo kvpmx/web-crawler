@@ -1,4 +1,8 @@
 Metrics:
   Enabled: false
+
 Style/FrozenStringLiteralComment:
   Enabled: false
+
+AllCops:
+  NewCops: enable

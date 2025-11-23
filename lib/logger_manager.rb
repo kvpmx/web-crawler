@@ -12,7 +12,7 @@ module Application
         files = logging_config['files'] || {}
 
         # Ensure log directory exists
-        FileUtils.mkdir_p(directory) unless Dir.exist?(directory)
+        FileUtils.mkdir_p(directory)
 
         # Set up main application log file
         app_log_file = files['application_log'] || 'app.log'
@@ -36,19 +36,17 @@ module Application
       end
 
       # Log processed file information
-      # @param file_path [String] Path to the processed file
+      # @param filename [String] Path to the processed file
       # @param status [String] Processing status (default: 'SUCCESS')
       # @param additional_info [String] Additional information (optional)
-      def log_processed_file(file_path, status = 'SUCCESS', additional_info = nil)
+      def log_processed_file(filename, status = 'SUCCESS', additional_info = nil)
         init unless @logger
         current_logger = @logger
 
-        message = "File processed: #{file_path} | Status: #{status}"
+        message = "File processed: #{filename} | Status: #{status}"
         message += " | Info: #{additional_info}" if additional_info
 
         case status.upcase
-        when 'SUCCESS', 'COMPLETED'
-          current_logger.info(message)
         when 'WARNING', 'WARN'
           current_logger.warn(message)
         when 'ERROR', 'FAILED'
@@ -98,7 +96,7 @@ module Application
         error_log_path = File.join(directory, error_log_file)
 
         # Ensure directory exists
-        FileUtils.mkdir_p(directory) unless Dir.exist?(directory)
+        FileUtils.mkdir_p(directory)
 
         @error_logger = Logger.new(error_log_path)
         @error_logger.level = Logger::ERROR
