@@ -16,6 +16,9 @@ module Application
 
     # BookItem usage demo
     test_book_item
+
+    # Cart usage demo
+    test_cart
   end
 
   def self.test_logger
@@ -62,6 +65,31 @@ module Application
     # Comparison
     comparison = item <=> fake_item
     puts "\nComparison by price (item <=> fake_item): #{comparison}"
+  end
+
+  def self.test_cart
+    cart = Cart.new
+
+    # Generate and display items
+    cart.generate_test_items(5)
+    puts "\nCart class info:", Cart.class_info
+    puts "\nTotal price:", cart.total_price
+    puts "\nAll available?:", cart.all_available?
+    puts "\nUnique categories:", cart.unique_categories.inspect
+
+    first_expensive = cart.find_item { |i| i.price.to_f > 50 }
+    puts "\nFirst item with price > 50:\n#{first_expensive}"
+
+    # Demo for `method_missing`
+    puts "\nAll items:"
+    cart.show_all_items
+
+    # Persistence
+    out_dir = 'output'
+    cart.save_to_file(File.join(out_dir, 'items.txt'))
+    cart.save_to_json(File.join(out_dir, 'items.json'))
+    cart.save_to_csv(File.join(out_dir, 'items.csv'))
+    cart.save_to_yml(File.join(out_dir, 'yaml'))
   end
 end
 
