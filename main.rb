@@ -19,6 +19,9 @@ module Application
 
     # Cart usage demo
     test_cart
+
+    # Configurator demo
+    test_configurator
   end
 
   def self.test_logger
@@ -90,6 +93,34 @@ module Application
     cart.save_to_json(File.join(out_dir, 'items.json'))
     cart.save_to_csv(File.join(out_dir, 'items.csv'))
     cart.save_to_yml(File.join(out_dir, 'yaml'))
+  end
+
+  def self.test_configurator
+    configurator = Configurator.new(run_save_to_json: 1)
+
+    puts "\nConfigurator initial config:", configurator.config
+
+    configurator.configure(
+      run_website_parser: 1,
+      run_save_to_csv: 1,
+      run_save_to_yaml: 1,
+      run_save_to_sqlite: 1,
+      run_unknown_handler: 1
+    )
+
+    puts "\nConfigurator updated config:", configurator.config
+    puts "\nAvailable config keys:", Configurator.available_methods
+
+    actions = {
+      run_website_parser: -> { puts 'Running website parser...' },
+      run_save_to_csv: -> { puts 'Exporting data to CSV...' },
+      run_save_to_yaml: -> { puts 'Exporting data to YAML...' },
+      run_save_to_sqlite: -> { puts 'Persisting data to SQLite...' },
+      run_save_to_mongodb: -> { puts 'Persisting data to MongoDB...' }
+    }
+
+    puts "\nExecuting enabled actions:"
+    configurator.run_actions(actions)
   end
 end
 
