@@ -7,8 +7,8 @@ sqlite_database:
 
   # Additional parameters (if necessary)
   timeout: 5000 # Connection timeout in milliseconds
-  pool_size: 5  # Connection pool size
+  pool_size: 5 # Connection pool size
 
 mongodb_database:
-  uri: mongodb://localhost:27017  # URL for connecting to MongoDB
-  db_name: my_database  # Name of the MongoDB database
+  uri: mongodb://localhost:27017 # URL for connecting to MongoDB
+  db_name: web_crawler_db # Name of the MongoDB database

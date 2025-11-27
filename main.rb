@@ -22,6 +22,9 @@ module Application
 
     # Configurator demo
     test_configurator
+
+    # DatabaseConnector demo
+    test_database_connector
   end
 
   def self.test_logger
@@ -121,6 +124,50 @@ module Application
 
     puts "\nExecuting enabled actions:"
     configurator.run_actions(actions)
+  end
+
+  def self.test_database_connector
+    puts "\n=== DatabaseConnector Test ==="
+
+    # Get database configuration
+    database_config = AppConfigLoader.conf['database']
+
+    # Test SQLite connection
+    puts "\nTesting SQLite connection..."
+    begin
+      sqlite_connector = DatabaseConnector.new(database_config)
+      sqlite_connector.connect_to_database
+
+      puts '[OK] Successfully connected to SQLite database'
+      puts "  Database file: #{database_config['sqlite_database']['db_file']}"
+
+      sqlite_connector.close_connection
+      puts '[OK] Successfully closed SQLite connection'
+    rescue StandardError => e
+      puts "[ERR] SQLite connection failed: #{e.message}"
+    end
+
+    # Test MongoDB connection
+    puts "\nTesting MongoDB connection..."
+    begin
+      mongodb_config = database_config.dup
+      mongodb_config['database_type'] = 'mongodb'
+
+      mongodb_connector = DatabaseConnector.new(mongodb_config)
+      mongodb_connector.connect_to_database
+
+      puts '[OK] Successfully connected to MongoDB database'
+      puts "  URI: #{mongodb_config['mongodb_database']['uri']}"
+      puts "  Database name: #{mongodb_config['mongodb_database']['db_name']}"
+
+      mongodb_connector.close_connection
+      puts '[OK] Successfully closed MongoDB connection'
+    rescue StandardError => e
+      puts "[ERR] MongoDB connection failed: #{e.message}"
+      puts '  (This is expected if MongoDB is not running locally)'
+    end
+
+    puts "\n=== DatabaseConnector Test Complete ==="
   end
 end
 

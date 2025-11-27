@@ -52,3 +52,6 @@ logs/
 
 # Output files
 output/
+
+# Local database
+db/
