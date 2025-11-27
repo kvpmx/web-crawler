@@ -1,6 +1,3 @@
-require 'sqlite3'
-require 'mongo'
-
 module Application
   # DatabaseConnector class responsible for connecting to databases based on configuration
   class DatabaseConnector
@@ -38,7 +35,70 @@ module Application
       @db = nil
     end
 
+    # Save items to SQLite database
+    def save_items_to_sqlite(items)
+      return unless @db && items
+
+      create_items_table_sqlite if @config['database_type'] == 'sqlite'
+
+      items.each do |item|
+        save_item_to_sqlite(item)
+      end
+    end
+
+    # Save items to MongoDB database
+    def save_items_to_mongodb(items)
+      return unless @db && items
+
+      collection = @db[@config.dig('mongodb_database', 'collection') || 'items']
+
+      items.each do |item|
+        save_item_to_mongodb(collection, item)
+      end
+    end
+
     private
+
+    # Create items table in SQLite
+    def create_items_table_sqlite
+      @db.execute <<-SQL
+        CREATE TABLE IF NOT EXISTS items (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT,
+          description TEXT,
+          category TEXT,
+          price REAL,
+          availability BOOLEAN,
+          image_path TEXT,
+          product_info TEXT,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+      SQL
+    end
+
+    # Save single item to SQLite
+    def save_item_to_sqlite(item)
+      item_hash = item.to_h
+      @db.execute(
+        'INSERT INTO items (title, description, category, price, availability, image_path, product_info) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [
+          item_hash[:title],
+          item_hash[:description],
+          item_hash[:category],
+          item_hash[:price],
+          item_hash[:availability] ? 1 : 0,
+          item_hash[:image_path],
+          item_hash[:product_info].to_json
+        ]
+      )
+    end
+
+    # Save single item to MongoDB
+    def save_item_to_mongodb(collection, item)
+      item_hash = item.to_h
+      item_hash[:created_at] = Time.now
+      collection.insert_one(item_hash)
+    end
 
     # Connect to SQLite database
     # @return [SQLite3::Database] SQLite database connection

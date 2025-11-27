@@ -4,7 +4,25 @@ module Application
     class << self
       attr_reader :conf, :loaded_files
 
-      SYSTEM_LIBS = %w[json yaml csv erb logger fileutils pp mechanize digest pathname uri net/http].freeze
+      SYSTEM_LIBS = %w[
+        json
+        yaml
+        csv
+        erb
+        logger
+        fileutils
+        pp
+        mechanize
+        digest
+        pathname
+        uri
+        net/http
+        sqlite3
+        mongo
+        zip
+        sidekiq
+        pony
+      ].freeze
 
       # Main method for loading configuration
       # @param config_path [String] Path to the main configuration file

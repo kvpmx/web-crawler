@@ -25,6 +25,9 @@ module Application
 
     # DatabaseConnector demo
     test_database_connector
+
+    # Engine demo
+    test_engine
   end
 
   def self.test_logger
@@ -168,6 +171,38 @@ module Application
     end
 
     puts "\n=== DatabaseConnector Test Complete ==="
+  end
+
+  def self.test_engine
+    puts "\n=== Engine Test ==="
+
+    # Create engine instance
+    engine = Engine.new
+
+    # Test configuration loading
+    puts "\nTesting configuration loading..."
+    if engine.load_config
+      puts '[OK] Configuration loaded successfully'
+    else
+      puts '[FAIL] Failed to load configuration'
+      return
+    end
+
+    # Test run_methods with a subset of methods (without actual parsing to save time)
+    test_config = {
+      run_save_to_csv: 0,    # Disabled for test
+      run_save_to_json: 0,   # Disabled for test
+      run_save_to_yaml: 0,   # Disabled for test
+      run_save_to_sqlite: 0, # Disabled for test
+      run_save_to_mongodb: 0, # Disabled for test
+      run_website_parser: 0 # Disabled for test
+    }
+
+    puts "\nTesting run_methods with disabled methods..."
+    engine.run_methods(test_config)
+    puts '[OK] run_methods executed without errors'
+
+    puts "\n=== Engine Test Complete ==="
   end
 end
 
