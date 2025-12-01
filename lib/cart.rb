@@ -85,16 +85,35 @@ module Application
       nil
     end
 
-    # Persistence: save each item as a separate YAML file in directory
+    # Persistence: save each item as a separate YAML file in category-based subdirectories
     def save_to_yml(dir_path)
       ensure_directory(dir_path)
-      each_with_index do |item, index|
-        raw = item.respond_to?(:to_h) ? item.to_h : {}
-        hash = deep_stringify_keys(raw)
-        file_path = File.join(dir_path, "item_#{index + 1}.yml")
-        File.write(file_path, YAML.dump(hash))
-        LoggerManager.log_processed_file(file_path, 'SUCCESS', 'Saved YAML file')
+
+      # Group items by category
+      items_by_category = group_by do |item|
+        if item.respond_to?(:category) && item.category
+          sanitize_category_name(item.category)
+        else
+          'uncategorized'
+        end
       end
+
+      item_counter = 0
+      items_by_category.each do |category, category_items|
+        # Create category subdirectory
+        category_dir = File.join(dir_path, category)
+        ensure_directory(category_dir)
+
+        category_items.each do |item|
+          item_counter += 1
+          raw = item.respond_to?(:to_h) ? item.to_h : {}
+          hash = deep_stringify_keys(raw)
+          file_path = File.join(category_dir, "item_#{item_counter}.yml")
+          File.write(file_path, YAML.dump(hash))
+          LoggerManager.log_processed_file(file_path, 'SUCCESS', "Saved YAML file in category: #{category}")
+        end
+      end
+
       dir_path
     rescue StandardError => e
       LoggerManager.log_error('Failed to save YAML files', e, "#{self.class}#save_to_yml")
@@ -153,6 +172,17 @@ module Application
       return if dir.nil? || dir.empty?
 
       FileUtils.mkdir_p(dir)
+    end
+
+    def sanitize_category_name(category)
+      # Sanitize category name for use as directory name
+      sanitized = category.to_s.downcase
+      # Replace spaces and special characters with underscores
+      sanitized = sanitized.gsub(/[^a-z0-9\s\-_]/, '').gsub(/[\s\-_]+/, '_')
+      # Remove leading/trailing underscores and limit length
+      sanitized = sanitized.gsub(/^_+|_+$/, '')
+      # Ensure it's not empty
+      sanitized.empty? ? 'uncategorized' : sanitized
     end
 
     # Keep nested structures for JSON/YAML but stringify keys for consistency

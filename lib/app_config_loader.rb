@@ -12,6 +12,7 @@ module Application
         logger
         fileutils
         pp
+        faker
         mechanize
         digest
         pathname

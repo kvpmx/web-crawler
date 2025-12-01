@@ -3,7 +3,7 @@ start_page: "https://books.toscrape.com/index.html"
 
 # Selectors
 book_details_link: "article.product_pod a"
-next_page_link: "ul.page li.next a"
+next_page_link: "ul.pager li.next a"
 
 title: ".product_main h1"
 description: "#product_description + p"

@@ -1,5 +1,3 @@
-require 'sidekiq'
-
 module Application
   # Background job class for sending archives via email
   class ArchiveSender

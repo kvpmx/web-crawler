@@ -80,7 +80,8 @@ module Application
     def save_item_to_sqlite(item)
       item_hash = item.to_h
       @db.execute(
-        'INSERT INTO items (title, description, category, price, availability, image_path, product_info) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO items (title, description, category, price, availability, image_path, product_info)' \
+        'VALUES (?, ?, ?, ?, ?, ?, ?)',
         [
           item_hash[:title],
           item_hash[:description],

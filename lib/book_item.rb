@@ -1,5 +1,3 @@
-require 'faker'
-
 module Application
   # Class for representation parsed book item data
   class BookItem

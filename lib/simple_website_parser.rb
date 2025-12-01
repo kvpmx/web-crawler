@@ -106,7 +106,7 @@ module Application
         description: extract_product_description(page),
         category: category,
         price: extract_product_price(page),
-        availability: parse_availability_flag(availability_text),
+        availability: parse_availability_flag?(availability_text),
         image_path: image_path,
         product_info: product_info
       }
@@ -267,8 +267,19 @@ module Application
       agent_config = config['agent'] || {}
       Mechanize.new.tap do |mech|
         mech.user_agent_alias = agent_config['user_agent_alias'] || FALLBACK_USER_AGENT
-        mech.read_timeout = agent_config['read_timeout'].to_i.positive? ? agent_config['read_timeout'].to_i : DEFAULT_TIMEOUT
-        mech.open_timeout = agent_config['open_timeout'].to_i.positive? ? agent_config['open_timeout'].to_i : DEFAULT_TIMEOUT
+
+        mech.read_timeout = if agent_config['read_timeout'].to_i.positive?
+                              agent_config['read_timeout'].to_i
+                            else
+                              DEFAULT_TIMEOUT
+                            end
+
+        mech.open_timeout = if agent_config['open_timeout'].to_i.positive?
+                              agent_config['open_timeout'].to_i
+                            else
+                              DEFAULT_TIMEOUT
+                            end
+
         mech.keep_alive = agent_config.fetch('keep_alive', true)
         mech.max_history = 1
       end
