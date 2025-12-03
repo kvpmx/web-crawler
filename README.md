@@ -1,17 +1,9 @@
 # 🕷️ Web Crawler
 
-The project focuses on crawling the website [Books to Scrape](http://books.toscrape.com/),
-a sandbox site created specifically for practicing web scraping.
-This makes it a safe and legal choice for experimentation.
-The purpose of the crawler is to collect structured data about books
-and store it in a convenient format for later analysis.
+A Ruby-based web scraper for collecting structured book data from [Books to Scrape](http://books.toscrape.com/) — a sandbox site designed for practicing web scraping techniques.
 
-The crawler begins at the homepage and retrieves all the data about available books.
-From every catalogue page, links to individual book detail pages are collected.
-On each detail page, the crawler extracts comprehensive information
-such as the book title, description, price, availability, rating etc.
-Additionally, the URL of the book’s page and the cover image link are gathered.
-An optional step is downloading the images themselves into a local folder.
+## How It Works
 
-All collected data is stored in a CSV file. Each row corresponds to a single book.
-This ensures that the dataset is complete and ready for analysis or integration into other tools.
+The crawler begins at the homepage and works through the catalogue page by page. On each listing page, it collects links to individual book detail pages, then hands those links off to a pool of worker threads for parallel processing. Each thread navigates to a book's detail page and extracts the title, description, price, stock availability, category, and a table of additional product information such as UPC, tax, and review count. The cover image is downloaded and saved into a category-based folder structure under the `media/` directory.
+
+Once a listing page is fully processed, the crawler looks for a "next" pagination link. If one exists, it moves on and repeats the process; otherwise, parsing is complete. All collected items are then exported to the configured output formats — CSV, JSON, and individual YAML files grouped by category — and optionally persisted to a SQLite or MongoDB database. Finally, the output folder is bundled into a timestamped ZIP archive for convenient storage or transfer.

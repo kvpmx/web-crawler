@@ -124,7 +124,7 @@ module Application
     end
 
     # Connect to MongoDB database
-    # @return [Mongo::Client] MongoDB client connection
+    # @return [Mongo::Client] MongoDB client connected to specified database
     def connect_to_mongodb
       mongodb_config = @config['mongodb_database']
       uri = mongodb_config['uri']
@@ -134,9 +134,13 @@ module Application
       raise ArgumentError, 'MongoDB database name is required' unless db_name
 
       begin
-        @db = Mongo::Client.new(uri)
+        client = Mongo::Client.new(uri)
         # Test the connection
-        @db.database_names
+        client.database_names
+        # Switch to the specified database - use() returns a new client connected to that database
+        @db = client.use(db_name)
+
+        puts "Connected to MongoDB database: #{db_name}"
       rescue Mongo::Error => e
         raise "Failed to connect to MongoDB at '#{uri}' with database '#{db_name}': #{e.message}"
       end

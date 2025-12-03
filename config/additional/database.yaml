@@ -12,3 +12,4 @@ sqlite_database:
 mongodb_database:
   uri: mongodb://localhost:27017 # URL for connecting to MongoDB
   db_name: web_crawler_db # Name of the MongoDB database
+  collection: items # Name of the MongoDB collection for storing items

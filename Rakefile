@@ -42,14 +42,13 @@ task :clean do
   require 'fileutils'
 
   puts 'Cleaning output files...'
-  FileUtils.rm_rf('output/*.csv')
-  FileUtils.rm_rf('output/*.json')
-  FileUtils.rm_rf('output/*.txt')
-  FileUtils.rm_rf('output/yaml/*.yml')
-  FileUtils.rm_rf('output/*.zip')
+  FileUtils.rm_rf('output')
 
   puts 'Cleaning log files...'
-  FileUtils.rm_rf('logs/*.log')
+  FileUtils.rm_rf('logs')
+
+  puts 'Cleaning media files...'
+  FileUtils.rm_rf('media')
 
   puts 'Clean completed.'
 end

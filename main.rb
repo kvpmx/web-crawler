@@ -24,6 +24,8 @@ module Application
       puts 'Initializing configurator...'
       configurator = Configurator.new
 
+      database_type = AppConfigLoader.conf['database']['database_type']
+
       # Get configuration parameters for the application run
       # You can override these values or load them from additional config
       run_config = {
@@ -31,8 +33,8 @@ module Application
         run_save_to_csv: 1,     # Enable CSV export
         run_save_to_json: 1,    # Enable JSON export
         run_save_to_yaml: 1,    # Enable YAML export
-        run_save_to_sqlite: 1,  # Enable SQLite storage
-        run_save_to_mongodb: 1  # Enable MongoDB
+        run_save_to_sqlite: database_type == 'sqlite' ? 1 : 0,  # Enable SQLite storage
+        run_save_to_mongodb: database_type == 'mongodb' ? 1 : 0 # Enable MongoDB
       }
 
       # Configure the application with the desired parameters
